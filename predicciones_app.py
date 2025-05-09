@@ -77,6 +77,31 @@ st.title("Predicción de Demanda de Inventario")
 excel_path = "Items_Morante.xlsx"
 df = cargar_datos(excel_path)
 items = df['ITEM'].unique()
+st.subheader("Predicción rápida para los primeros 20 ítems")
+
+primeros_items = df['ITEM'].unique()[:20]
+
+for i in primeros_items:
+    st.markdown(f"### Ítem: {i}")
+    df_i = df[df['ITEM'] == i].copy()
+    
+    try:
+        prophet_pred_i = entrenar_prophet(df_i, periodo)
+        arima_pred_i = entrenar_arima(df_i, periodo)
+        rnn_pred_i = entrenar_rnn(df_i, periodo)
+        real_i = df_i.set_index('FECHA_VENTA')['CANTIDAD_VENDIDA'][-periodo:]
+
+        fig, ax = plt.subplots(figsize=(8, 3))
+        ax.plot(real_i.index, real_i.values, label='Real', marker='o')
+        ax.plot(prophet_pred_i[-periodo:].index, prophet_pred_i[-periodo:]['yhat'], label='Prophet', marker='x')
+        ax.plot(arima_pred_i.index, arima_pred_i.values, label='ARIMA', marker='s')
+        ax.plot(rnn_pred_i.index, rnn_pred_i.values, label='RNN', marker='d')
+        ax.set_title(f'Predicción para {i}')
+        ax.legend(fontsize="small")
+        st.pyplot(fig)
+    except:
+        st.warning(f"No se pudo generar predicción para el ítem {i}.")
+
 
 item_seleccionado = st.selectbox("Selecciona un ítem para analizar:", items)
 
