@@ -83,7 +83,7 @@ item_seleccionado = st.selectbox("Selecciona un ítem para analizar:", items)
 df_item = df[df['ITEM'] == item_seleccionado].copy()
 descripcion = df_item['DESCRIPCION'].iloc[0]
 st.write(f"**Descripción del ítem:** {descripcion}")
-periodo = st.slider("Días a predecir", min_value=7, max_value=60, value=30)
+periodo = st.slider("Días a predecir", min_value=7, max_value=60, value=45)
 
 # Predicciones
 prophet_pred = entrenar_prophet(df_item, periodo)
