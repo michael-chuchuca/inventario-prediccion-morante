@@ -74,7 +74,7 @@ def entrenar_rnn(df, periodo):
 
 st.title("Predicción de Demanda de Inventario")
 
-excel_path = "ventas_items.xlsx"
+excel_path = "Items_Morante.xlsx"
 df = cargar_datos(excel_path)
 items = df['ITEM'].unique()
 
